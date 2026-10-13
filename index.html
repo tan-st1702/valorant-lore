@@ -1409,6 +1409,20 @@
             if (e.key === 'Escape') closeModal();
         });
 
+        // Цвета для агентов
+        function getAgentColor(name) {
+            const colors = {
+                "Jett": "#00c8c8", "Phoenix": "#ff6b35", "Sage": "#00ff88", "Reyna": "#ff0055",
+                "Omen": "#8b00ff", "Cypher": "#ffd700", "Breach": "#ff4500", "Sova": "#00bfff",
+                "Viper": "#32cd32", "Killjoy": "#ff69b4", "Skye": "#87ceeb", "Yoru": "#4b0082",
+                "Astra": "#daa520", "KAY/O": "#c0c0c0", "Fade": "#483d8b", "Harbor": "#20b2aa",
+                "Gekko": "#9acd32", "Deadlock": "#708090", "Iso": "#da70d6", "Clove": "#ff1493",
+                "Vyse": "#3cb371", "Tejo": "#ff8c00", "Waylay": "#00ced1", "Chamber": "#b8860b",
+                "Raze": "#ff4500"
+            };
+            return colors[name] || "#ff4655";
+        }
+
         // Отрисовка графа взаимоотношений
         function renderGraph() {
             const svg = document.getElementById('graphSvg');
@@ -1496,28 +1510,39 @@
                 circle.setAttribute('r', 35);
                 circle.setAttribute('class', 'graph-node-circle');
 
-                // Портрет агента
+                // Портрет агента через прокси
                 const portraitUrl = agentPortraits[agent.name];
                 if (portraitUrl) {
+                    const proxyUrl = `https://images.weserv.nl/?url=${encodeURIComponent(portraitUrl.replace('https://', ''))}&w=60&h=60&fit=cover`;
                     const image = document.createElementNS('http://www.w3.org/2000/svg', 'image');
-                    image.setAttribute('href', portraitUrl);
+                    image.setAttribute('href', proxyUrl);
                     image.setAttribute('x', pos.x - 30);
                     image.setAttribute('y', pos.y - 30);
                     image.setAttribute('width', 60);
                     image.setAttribute('height', 60);
                     image.setAttribute('clip-path', 'circle(30px)');
                     group.appendChild(image);
+                } else {
+                    // Фallback: кружок с инициалами
+                    const innerCircle = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
+                    innerCircle.setAttribute('cx', pos.x);
+                    innerCircle.setAttribute('cy', pos.y);
+                    innerCircle.setAttribute('r', 30);
+                    innerCircle.setAttribute('fill', getAgentColor(agent.name));
+                    innerCircle.setAttribute('opacity', '0.3');
+
+                    const text = document.createElementNS('http://www.w3.org/2000/svg', 'text');
+                    text.setAttribute('x', pos.x);
+                    text.setAttribute('y', pos.y);
+                    text.setAttribute('class', 'graph-node-text');
+                    text.setAttribute('font-size', '16');
+                    text.textContent = agent.name.substring(0, 2).toUpperCase();
+
+                    group.appendChild(innerCircle);
+                    group.appendChild(text);
                 }
 
-                // Имя агента под кружком
-                const text = document.createElementNS('http://www.w3.org/2000/svg', 'text');
-                text.setAttribute('x', pos.x);
-                text.setAttribute('y', pos.y + 50);
-                text.setAttribute('class', 'graph-node-text');
-                text.textContent = agent.name;
-
                 group.appendChild(circle);
-                group.appendChild(text);
 
                 group.addEventListener('click', () => openModal(agent));
 
