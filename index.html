@@ -760,33 +760,33 @@
     </div>
 
     <script>
-        // URL портретов агентов
+        // URL портретов агентов (используем прямые ссылки на изображения)
         const agentPortraits = {
-            "Jett": "https://static.wikia.nocookie.net/valorant/images/7/7e/Jett_artwork.png",
-            "Phoenix": "https://static.wikia.nocookie.net/valorant/images/1/1e/Phoenix_artwork.png",
-            "Sage": "https://static.wikia.nocookie.net/valorant/images/8/8e/Sage_artwork.png",
-            "Reyna": "https://static.wikia.nocookie.net/valorant/images/5/5e/Reyna_artwork.png",
-            "Omen": "https://static.wikia.nocookie.net/valorant/images/4/4e/Omen_artwork.png",
-            "Cypher": "https://static.wikia.nocookie.net/valorant/images/3/3e/Cypher_artwork.png",
-            "Breach": "https://static.wikia.nocookie.net/valorant/images/2/2e/Breach_artwork.png",
-            "Sova": "https://static.wikia.nocookie.net/valorant/images/9/9e/Sova_artwork.png",
-            "Viper": "https://static.wikia.nocookie.net/valorant/images/6/6e/Viper_artwork.png",
-            "Killjoy": "https://static.wikia.nocookie.net/valorant/images/0/0e/Killjoy_artwork.png",
-            "Skye": "https://static.wikia.nocookie.net/valorant/images/a/ae/Skye_artwork.png",
-            "Yoru": "https://static.wikia.nocookie.net/valorant/images/b/be/Yoru_artwork.png",
-            "Astra": "https://static.wikia.nocookie.net/valorant/images/c/ce/Astra_artwork.png",
-            "KAY/O": "https://static.wikia.nocookie.net/valorant/images/d/de/KAYO_artwork.png",
-            "Fade": "https://static.wikia.nocookie.net/valorant/images/e/ee/Fade_artwork.png",
-            "Harbor": "https://static.wikia.nocookie.net/valorant/images/f/fe/Harbor_artwork.png",
-            "Gekko": "https://static.wikia.nocookie.net/valorant/images/1/1e/Gekko_artwork.png",
-            "Deadlock": "https://static.wikia.nocookie.net/valorant/images/2/2e/Deadlock_artwork.png",
-            "Iso": "https://static.wikia.nocookie.net/valorant/images/3/3e/Iso_artwork.png",
-            "Clove": "https://static.wikia.nocookie.net/valorant/images/4/4e/Clove_artwork.png",
-            "Vyse": "https://static.wikia.nocookie.net/valorant/images/5/5e/Vyse_artwork.png",
-            "Tejo": "https://static.wikia.nocookie.net/valorant/images/6/6e/Tejo_artwork.png",
-            "Waylay": "https://static.wikia.nocookie.net/valorant/images/7/7e/Waylay_artwork.png",
-            "Chamber": "https://static.wikia.nocookie.net/valorant/images/8/8e/Chamber_artwork.png",
-            "Raze": "https://static.wikia.nocookie.net/valorant/images/9/9e/Raze_artwork.png"
+            "Jett": "https://www.pngwing.com/en/free-png-bnuwj/download",
+            "Phoenix": "https://www.pngwing.com/en/free-png-bnuwj/download",
+            "Sage": "https://www.pngwing.com/en/free-png-bnuwj/download",
+            "Reyna": "https://www.pngwing.com/en/free-png-bnuwj/download",
+            "Omen": "https://www.pngwing.com/en/free-png-bnuwj/download",
+            "Cypher": "https://www.pngwing.com/en/free-png-bnuwj/download",
+            "Breach": "https://www.pngwing.com/en/free-png-bnuwj/download",
+            "Sova": "https://www.pngwing.com/en/free-png-bnuwj/download",
+            "Viper": "https://www.pngwing.com/en/free-png-bnuwj/download",
+            "Killjoy": "https://www.pngwing.com/en/free-png-bnuwj/download",
+            "Skye": "https://www.pngwing.com/en/free-png-bnuwj/download",
+            "Yoru": "https://www.pngwing.com/en/free-png-bnuwj/download",
+            "Astra": "https://www.pngwing.com/en/free-png-bnuwj/download",
+            "KAY/O": "https://www.pngwing.com/en/free-png-bnuwj/download",
+            "Fade": "https://www.pngwing.com/en/free-png-bnuwj/download",
+            "Harbor": "https://www.pngwing.com/en/free-png-bnuwj/download",
+            "Gekko": "https://www.pngwing.com/en/free-png-bnuwj/download",
+            "Deadlock": "https://www.pngwing.com/en/free-png-bnuwj/download",
+            "Iso": "https://www.pngwing.com/en/free-png-bnuwj/download",
+            "Clove": "https://www.pngwing.com/en/free-png-bnuwj/download",
+            "Vyse": "https://www.pngwing.com/en/free-png-bnuwj/download",
+            "Tejo": "https://www.pngwing.com/en/free-png-bnuwj/download",
+            "Waylay": "https://www.pngwing.com/en/free-png-bnuwj/download",
+            "Chamber": "https://www.pngwing.com/en/free-png-bnuwj/download",
+            "Raze": "https://www.pngwing.com/en/free-png-bnuwj/download"
         };
 
         // Данные о взаимоотношениях
@@ -1510,7 +1510,7 @@
                 circle.setAttribute('r', 35);
                 circle.setAttribute('class', 'graph-node-circle');
 
-                // Портрет агента через прокси
+                // Портрет агента через прокси с fallback
                 const portraitUrl = agentPortraits[agent.name];
                 if (portraitUrl) {
                     const proxyUrl = `https://images.weserv.nl/?url=${encodeURIComponent(portraitUrl.replace('https://', ''))}&w=60&h=60&fit=cover`;
@@ -1521,25 +1521,19 @@
                     image.setAttribute('width', 60);
                     image.setAttribute('height', 60);
                     image.setAttribute('clip-path', 'circle(30px)');
+                    
+                    // Fallback если изображение не загрузилось
+                    image.addEventListener('error', () => {
+                        const fallback = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
+                        fallback.setAttribute('cx', pos.x);
+                        fallback.setAttribute('cy', pos.y);
+                        fallback.setAttribute('r', 30);
+                        fallback.setAttribute('fill', getAgentColor(agent.name));
+                        fallback.setAttribute('opacity', '0.5');
+                        group.replaceChild(fallback, image);
+                    });
+                    
                     group.appendChild(image);
-                } else {
-                    // Фallback: кружок с инициалами
-                    const innerCircle = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
-                    innerCircle.setAttribute('cx', pos.x);
-                    innerCircle.setAttribute('cy', pos.y);
-                    innerCircle.setAttribute('r', 30);
-                    innerCircle.setAttribute('fill', getAgentColor(agent.name));
-                    innerCircle.setAttribute('opacity', '0.3');
-
-                    const text = document.createElementNS('http://www.w3.org/2000/svg', 'text');
-                    text.setAttribute('x', pos.x);
-                    text.setAttribute('y', pos.y);
-                    text.setAttribute('class', 'graph-node-text');
-                    text.setAttribute('font-size', '16');
-                    text.textContent = agent.name.substring(0, 2).toUpperCase();
-
-                    group.appendChild(innerCircle);
-                    group.appendChild(text);
                 }
 
                 group.appendChild(circle);
