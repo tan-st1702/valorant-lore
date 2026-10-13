@@ -584,11 +584,20 @@
 
         .graph-node-text {
             fill: var(--light);
-            font-size: 12px;
+            font-size: 11px;
             font-weight: 700;
             text-anchor: middle;
             dominant-baseline: central;
             font-family: 'Rajdhani', sans-serif;
+        }
+
+        .graph-node image {
+            clip-path: circle(30px);
+            transition: all 0.3s;
+        }
+
+        .graph-node:hover image {
+            filter: brightness(1.2);
         }
 
         .graph-edge {
@@ -677,7 +686,7 @@
         <nav>
             <a href="#hero">Главная</a>
             <a href="#agents">Агенты</a>
-            <a href="#lore">Лор</a>
+            <a href="#graph">Граф взаимоотношений</a>
         </nav>
     </header>
 
@@ -751,6 +760,35 @@
     </div>
 
     <script>
+        // URL портретов агентов
+        const agentPortraits = {
+            "Jett": "https://static.wikia.nocookie.net/valorant/images/7/7e/Jett_artwork.png",
+            "Phoenix": "https://static.wikia.nocookie.net/valorant/images/1/1e/Phoenix_artwork.png",
+            "Sage": "https://static.wikia.nocookie.net/valorant/images/8/8e/Sage_artwork.png",
+            "Reyna": "https://static.wikia.nocookie.net/valorant/images/5/5e/Reyna_artwork.png",
+            "Omen": "https://static.wikia.nocookie.net/valorant/images/4/4e/Omen_artwork.png",
+            "Cypher": "https://static.wikia.nocookie.net/valorant/images/3/3e/Cypher_artwork.png",
+            "Breach": "https://static.wikia.nocookie.net/valorant/images/2/2e/Breach_artwork.png",
+            "Sova": "https://static.wikia.nocookie.net/valorant/images/9/9e/Sova_artwork.png",
+            "Viper": "https://static.wikia.nocookie.net/valorant/images/6/6e/Viper_artwork.png",
+            "Killjoy": "https://static.wikia.nocookie.net/valorant/images/0/0e/Killjoy_artwork.png",
+            "Skye": "https://static.wikia.nocookie.net/valorant/images/a/ae/Skye_artwork.png",
+            "Yoru": "https://static.wikia.nocookie.net/valorant/images/b/be/Yoru_artwork.png",
+            "Astra": "https://static.wikia.nocookie.net/valorant/images/c/ce/Astra_artwork.png",
+            "KAY/O": "https://static.wikia.nocookie.net/valorant/images/d/de/KAYO_artwork.png",
+            "Fade": "https://static.wikia.nocookie.net/valorant/images/e/ee/Fade_artwork.png",
+            "Harbor": "https://static.wikia.nocookie.net/valorant/images/f/fe/Harbor_artwork.png",
+            "Gekko": "https://static.wikia.nocookie.net/valorant/images/1/1e/Gekko_artwork.png",
+            "Deadlock": "https://static.wikia.nocookie.net/valorant/images/2/2e/Deadlock_artwork.png",
+            "Iso": "https://static.wikia.nocookie.net/valorant/images/3/3e/Iso_artwork.png",
+            "Clove": "https://static.wikia.nocookie.net/valorant/images/4/4e/Clove_artwork.png",
+            "Vyse": "https://static.wikia.nocookie.net/valorant/images/5/5e/Vyse_artwork.png",
+            "Tejo": "https://static.wikia.nocookie.net/valorant/images/6/6e/Tejo_artwork.png",
+            "Waylay": "https://static.wikia.nocookie.net/valorant/images/7/7e/Waylay_artwork.png",
+            "Chamber": "https://static.wikia.nocookie.net/valorant/images/8/8e/Chamber_artwork.png",
+            "Raze": "https://static.wikia.nocookie.net/valorant/images/9/9e/Raze_artwork.png"
+        };
+
         // Данные о взаимоотношениях
         const relationships = [
             { source: "Chamber", target: "Viper", type: "love", description: "Chamber и Viper — романтическая пара. Их связь началась с взаимного уважения к интеллекту друг друга, но быстро переросла в нечто большее. Оба — гении в своих областях, и их отношения построены на глубоком понимании и доверии." },
@@ -1451,17 +1489,32 @@
                 const group = document.createElementNS('http://www.w3.org/2000/svg', 'g');
                 group.setAttribute('class', 'graph-node');
 
+                // Кружок с портретом
                 const circle = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
                 circle.setAttribute('cx', pos.x);
                 circle.setAttribute('cy', pos.y);
                 circle.setAttribute('r', 35);
                 circle.setAttribute('class', 'graph-node-circle');
 
+                // Портрет агента
+                const portraitUrl = agentPortraits[agent.name];
+                if (portraitUrl) {
+                    const image = document.createElementNS('http://www.w3.org/2000/svg', 'image');
+                    image.setAttribute('href', portraitUrl);
+                    image.setAttribute('x', pos.x - 30);
+                    image.setAttribute('y', pos.y - 30);
+                    image.setAttribute('width', 60);
+                    image.setAttribute('height', 60);
+                    image.setAttribute('clip-path', 'circle(30px)');
+                    group.appendChild(image);
+                }
+
+                // Имя агента под кружком
                 const text = document.createElementNS('http://www.w3.org/2000/svg', 'text');
                 text.setAttribute('x', pos.x);
-                text.setAttribute('y', pos.y);
+                text.setAttribute('y', pos.y + 50);
                 text.setAttribute('class', 'graph-node-text');
-                text.textContent = agent.name.substring(0, 2).toUpperCase();
+                text.textContent = agent.name;
 
                 group.appendChild(circle);
                 group.appendChild(text);
