@@ -1,0 +1,1151 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>VALORANT — Лор Агентов</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@400;500;600;700&family=Russo+One&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --red: #ff4655;
+            --dark: #0f1923;
+            --light: #ece8e1;
+            --teal: #00c8c8;
+            --yellow: #ffd700;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Rajdhani', sans-serif;
+            background: var(--dark);
+            color: var(--light);
+            overflow-x: hidden;
+            min-height: 100vh;
+        }
+
+        /* Анимированный фон */
+        .bg-animation {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            background: 
+                radial-gradient(ellipse at 20% 50%, rgba(255, 70, 85, 0.08) 0%, transparent 50%),
+                radial-gradient(ellipse at 80% 20%, rgba(0, 200, 200, 0.05) 0%, transparent 50%),
+                var(--dark);
+        }
+
+        .bg-animation::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-image: 
+                linear-gradient(rgba(255, 70, 85, 0.03) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(255, 70, 85, 0.03) 1px, transparent 1px);
+            background-size: 50px 50px;
+            animation: gridMove 20s linear infinite;
+        }
+
+        @keyframes gridMove {
+            0% { transform: perspective(500px) rotateX(60deg) translateY(0); }
+            100% { transform: perspective(500px) rotateX(60deg) translateY(50px); }
+        }
+
+        /* Шапка */
+        header {
+            padding: 20px 40px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid rgba(255, 70, 85, 0.2);
+            background: rgba(15, 25, 35, 0.8);
+            backdrop-filter: blur(10px);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .logo {
+            font-family: 'Russo One', sans-serif;
+            font-size: 28px;
+            color: var(--red);
+            text-transform: uppercase;
+            letter-spacing: 3px;
+        }
+
+        .logo span {
+            color: var(--light);
+        }
+
+        nav {
+            display: flex;
+            gap: 30px;
+        }
+
+        nav a {
+            color: var(--light);
+            text-decoration: none;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            font-size: 14px;
+            transition: color 0.3s;
+            position: relative;
+        }
+
+        nav a:hover {
+            color: var(--red);
+        }
+
+        nav a::after {
+            content: '';
+            position: absolute;
+            bottom: -5px;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background: var(--red);
+            transition: width 0.3s;
+        }
+
+        nav a:hover::after {
+            width: 100%;
+        }
+
+        /* Главный экран */
+        .hero {
+            min-height: 80vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            padding: 40px;
+            position: relative;
+        }
+
+        .hero h1 {
+            font-family: 'Russo One', sans-serif;
+            font-size: clamp(40px, 8vw, 80px);
+            text-transform: uppercase;
+            margin-bottom: 20px;
+            background: linear-gradient(135deg, var(--light) 0%, var(--red) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            animation: titleGlow 3s ease-in-out infinite alternate;
+        }
+
+        @keyframes titleGlow {
+            0% { filter: drop-shadow(0 0 10px rgba(255, 70, 85, 0.3)); }
+            100% { filter: drop-shadow(0 0 30px rgba(255, 70, 85, 0.6)); }
+        }
+
+        .hero p {
+            font-size: 20px;
+            max-width: 600px;
+            opacity: 0.8;
+            margin-bottom: 40px;
+        }
+
+        .cta-button {
+            padding: 15px 40px;
+            background: var(--red);
+            color: var(--light);
+            border: none;
+            font-family: 'Rajdhani', sans-serif;
+            font-size: 18px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            cursor: pointer;
+            position: relative;
+            overflow: hidden;
+            transition: all 0.3s;
+            clip-path: polygon(10px 0, 100% 0, 100% calc(100% - 10px), calc(100% - 10px) 100%, 0 100%, 0 10px);
+        }
+
+        .cta-button:hover {
+            background: #ff5a6e;
+            transform: translateY(-2px);
+            box-shadow: 0 10px 30px rgba(255, 70, 85, 0.4);
+        }
+
+        /* Секция агентов */
+        .agents-section {
+            padding: 60px 40px;
+        }
+
+        .section-title {
+            font-family: 'Russo One', sans-serif;
+            font-size: 36px;
+            text-transform: uppercase;
+            margin-bottom: 40px;
+            text-align: center;
+            position: relative;
+        }
+
+        .section-title::after {
+            content: '';
+            display: block;
+            width: 100px;
+            height: 3px;
+            background: var(--red);
+            margin: 15px auto 0;
+        }
+
+        /* Фильтры */
+        .filters {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            margin-bottom: 40px;
+            flex-wrap: wrap;
+        }
+
+        .filter-btn {
+            padding: 10px 25px;
+            background: transparent;
+            border: 1px solid rgba(255, 70, 85, 0.3);
+            color: var(--light);
+            font-family: 'Rajdhani', sans-serif;
+            font-size: 14px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            cursor: pointer;
+            transition: all 0.3s;
+            clip-path: polygon(5px 0, 100% 0, 100% calc(100% - 5px), calc(100% - 5px) 100%, 0 100%, 0 5px);
+        }
+
+        .filter-btn:hover,
+        .filter-btn.active {
+            background: var(--red);
+            border-color: var(--red);
+        }
+
+        /* Сетка агентов */
+        .agents-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 25px;
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        /* Карточка агента */
+        .agent-card {
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 70, 85, 0.15);
+            padding: 25px;
+            cursor: pointer;
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            position: relative;
+            overflow: hidden;
+            clip-path: polygon(0 0, calc(100% - 20px) 0, 100% 20px, 100% 100%, 20px 100%, 0 calc(100% - 20px));
+        }
+
+        .agent-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 3px;
+            background: var(--red);
+            transform: scaleX(0);
+            transition: transform 0.4s;
+        }
+
+        .agent-card:hover {
+            transform: translateY(-10px);
+            border-color: var(--red);
+            background: rgba(255, 70, 85, 0.05);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+        }
+
+        .agent-card:hover::before {
+            transform: scaleX(1);
+        }
+
+        .agent-role {
+            display: inline-block;
+            padding: 4px 12px;
+            font-size: 11px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 15px;
+            background: rgba(255, 70, 85, 0.15);
+            color: var(--red);
+        }
+
+        .agent-name {
+            font-family: 'Russo One', sans-serif;
+            font-size: 24px;
+            margin-bottom: 5px;
+            text-transform: uppercase;
+        }
+
+        .agent-real-name {
+            font-size: 14px;
+            opacity: 0.6;
+            margin-bottom: 15px;
+        }
+
+        .agent-origin {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 13px;
+            opacity: 0.7;
+            margin-bottom: 15px;
+        }
+
+        .agent-origin::before {
+            content: '📍';
+        }
+
+        .agent-description {
+            font-size: 14px;
+            line-height: 1.6;
+            opacity: 0.8;
+        }
+
+        /* Модальное окно */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.85);
+            backdrop-filter: blur(5px);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s;
+            padding: 20px;
+        }
+
+        .modal-overlay.active {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .modal {
+            background: var(--dark);
+            border: 1px solid var(--red);
+            max-width: 800px;
+            width: 100%;
+            max-height: 90vh;
+            overflow-y: auto;
+            position: relative;
+            transform: scale(0.9);
+            transition: transform 0.3s;
+            clip-path: polygon(0 0, calc(100% - 30px) 0, 100% 30px, 100% 100%, 30px 100%, 0 calc(100% - 30px));
+        }
+
+        .modal-overlay.active .modal {
+            transform: scale(1);
+        }
+
+        .modal-close {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            background: none;
+            border: none;
+            color: var(--light);
+            font-size: 30px;
+            cursor: pointer;
+            opacity: 0.5;
+            transition: opacity 0.3s;
+            z-index: 10;
+        }
+
+        .modal-close:hover {
+            opacity: 1;
+        }
+
+        .modal-header {
+            padding: 40px;
+            background: linear-gradient(135deg, rgba(255, 70, 85, 0.1) 0%, transparent 100%);
+            border-bottom: 1px solid rgba(255, 70, 85, 0.2);
+        }
+
+        .modal-role {
+            display: inline-block;
+            padding: 5px 15px;
+            font-size: 12px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            background: var(--red);
+            margin-bottom: 15px;
+        }
+
+        .modal-name {
+            font-family: 'Russo One', sans-serif;
+            font-size: 42px;
+            text-transform: uppercase;
+            margin-bottom: 5px;
+        }
+
+        .modal-real-name {
+            font-size: 18px;
+            opacity: 0.6;
+        }
+
+        .modal-body {
+            padding: 40px;
+        }
+
+        .lore-section {
+            margin-bottom: 30px;
+        }
+
+        .lore-section h3 {
+            font-family: 'Russo One', sans-serif;
+            font-size: 18px;
+            text-transform: uppercase;
+            color: var(--red);
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .lore-section h3::before {
+            content: '';
+            width: 20px;
+            height: 2px;
+            background: var(--red);
+        }
+
+        .lore-section p {
+            line-height: 1.8;
+            opacity: 0.9;
+            margin-bottom: 15px;
+        }
+
+        .abilities-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: 15px;
+        }
+
+        .ability {
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 70, 85, 0.15);
+            padding: 15px;
+            transition: all 0.3s;
+        }
+
+        .ability:hover {
+            border-color: var(--red);
+            background: rgba(255, 70, 85, 0.05);
+        }
+
+        .ability-key {
+            display: inline-block;
+            width: 30px;
+            height: 30px;
+            line-height: 30px;
+            text-align: center;
+            background: var(--red);
+            font-weight: 700;
+            font-size: 14px;
+            margin-bottom: 10px;
+            clip-path: polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%);
+        }
+
+        .ability-name {
+            font-weight: 700;
+            font-size: 14px;
+            text-transform: uppercase;
+            margin-bottom: 5px;
+        }
+
+        .ability-desc {
+            font-size: 12px;
+            opacity: 0.7;
+            line-height: 1.5;
+        }
+
+        /* Скроллбар */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: var(--dark);
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: var(--red);
+        }
+
+        /* Адаптивность */
+        @media (max-width: 768px) {
+            header {
+                flex-direction: column;
+                gap: 15px;
+                padding: 15px 20px;
+            }
+
+            nav {
+                gap: 15px;
+            }
+
+            .hero {
+                min-height: 60vh;
+            }
+
+            .agents-section {
+                padding: 40px 20px;
+            }
+
+            .modal-header,
+            .modal-body {
+                padding: 25px;
+            }
+
+            .modal-name {
+                font-size: 28px;
+            }
+        }
+
+        /* Анимации появления */
+        .fade-in {
+            animation: fadeIn 0.6s ease-out forwards;
+            opacity: 0;
+        }
+
+        @keyframes fadeIn {
+            to { opacity: 1; }
+        }
+
+        .stagger-1 { animation-delay: 0.1s; }
+        .stagger-2 { animation-delay: 0.2s; }
+        .stagger-3 { animation-delay: 0.3s; }
+        .stagger-4 { animation-delay: 0.4s; }
+        .stagger-5 { animation-delay: 0.5s; }
+    </style>
+</head>
+<body>
+    <div class="bg-animation"></div>
+
+    <header>
+        <div class="logo">VALO<span>RANT</span></div>
+        <nav>
+            <a href="#hero">Главная</a>
+            <a href="#agents">Агенты</a>
+            <a href="#lore">Лор</a>
+        </nav>
+    </header>
+
+    <section class="hero" id="hero">
+        <h1>Лор Агентов</h1>
+        <p>Узнай истории героев, сражающихся на передовой войны между мирами. Каждый агент — это уникальная личность со своим прошлым, мотивацией и тайнами.</p>
+        <button class="cta-button" onclick="scrollToAgents()">Исследовать агентов</button>
+    </section>
+
+    <section class="agents-section" id="agents">
+        <h2 class="section-title">Выбери агента</h2>
+        
+        <div class="filters">
+            <button class="filter-btn active" data-filter="all">Все</button>
+            <button class="filter-btn" data-filter="duelist">Дуэлянты</button>
+            <button class="filter-btn" data-filter="initiator">Инициаторы</button>
+            <button class="filter-btn" data-filter="controller">Контролёры</button>
+            <button class="filter-btn" data-filter="sentinel">Стражи</button>
+        </div>
+
+        <div class="agents-grid" id="agentsGrid">
+            <!-- Карточки агентов будут добавлены через JavaScript -->
+        </div>
+    </section>
+
+    <!-- Модальное окно -->
+    <div class="modal-overlay" id="modalOverlay" onclick="closeModal(event)">
+        <div class="modal" onclick="event.stopPropagation()">
+            <button class="modal-close" onclick="closeModal()">&times;</button>
+            <div class="modal-header">
+                <span class="modal-role" id="modalRole"></span>
+                <h2 class="modal-name" id="modalName"></h2>
+                <p class="modal-real-name" id="modalRealName"></p>
+            </div>
+            <div class="modal-body" id="modalBody">
+                <!-- Контент добавляется через JavaScript -->
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Данные агентов
+        const agents = [
+            {
+                id: 1,
+                name: "Jett",
+                realName: "Sunwoo Han",
+                role: "duelist",
+                roleName: "Дуэлянт",
+                origin: "Южная Корея",
+                description: "Быстрая и смертоносная агент, использующая ветер для передвижения и атаки.",
+                lore: {
+                    background: "Джетт родилась в Сеуле, Южная Корея, в семье шеф-повара. Её связь с ветром проявилась в раннем детстве — она могла чувствовать изменения погоды и предсказывать штормы. В подростковом возрасте она стала уличной гонщицей, используя свои способности для побега от полиции. После того как она случайно спасла группу людей от обрушения здания, её заметили вербовщики программы VALORANT. Джетт присоединилась к программе, чтобы использовать свои способности для защиты мира и найти своё место в жизни.",
+                    personality: "Джетт — уверенная в себе, немного высокомерная, но невероятно преданная своим друзьям. Она любит рисковать и часто действует импульсивно. Несмотря на свой дерзкий характер, она всегда готова прийти на помощь тем, кто в ней нуждается.",
+                    relationships: "У неё сложные отношения с Рейзой — они соперницы, но уважают друг друга. С Невой у неё дружеские отношения. Она также близка с Фениксом, который часто прикрывает её в бою."
+                },
+                abilities: [
+                    { key: "Q", name: "Восходящий поток", desc: "Позволяет Джетт взлететь в воздух" },
+                    { key: "E", name: "Порыв ветра", desc: "Даёт скорость передвижения" },
+                    { key: "C", name: "Клинки бури", desc: "Метает смертоносные ножи" },
+                    { key: "X", name: "Буря клинков", desc: "Усиливает клинки до максимальной мощности" }
+                ]
+            },
+            {
+                id: 2,
+                name: "Phoenix",
+                realName: "Jamie Adeyemi",
+                role: "duelist",
+                roleName: "Дуэлянт",
+                origin: "Великобритания",
+                description: "Огненный агент, способный исцелять себя и создавать огненные стены.",
+                lore: {
+                    background: "Феникс родился в Лондоне, Великобритания. Он вырос в семье учёных, которые работали над экспериментами с радиацией. В детстве Джейми попал в аварию в лаборатории родителей, в результате которой получил свои огненные способности. После долгой реабилитации он научился контролировать свою силу. Феникс присоединился к программе VALORANT, чтобы использовать свои способности для защиты других и найти своё место в мире, который его боится.",
+                    personality: "Феникс — харизматичный лидер, который заряжает энергией всех вокруг. Он оптимистичен и всегда старается видеть лучшее в любой ситуации. Несмотря на свой эгоцентричный характер, его сердце всегда на месте.",
+                    relationships: "Он хороший друг Джетт и часто прикрывает её в бою. С Скай у него романтические отношения. Он также близок с Бричем, который разделяет его любовь к приключениям."
+                },
+                abilities: [
+                    { key: "Q", name: "Огненный шар", desc: "Создаёт огненный шар, который ослепляет врагов" },
+                    { key: "E", name: "Горячие руки", desc: "Создаёт огненный барьер, исцеляющий Феникса" },
+                    { key: "C", name: "Огненная стена", desc: "Создаёт стену огня, блокирующую обзор" },
+                    { key: "X", name: "Возрождение", desc: "Возвращает Феникса к жизни с полным здоровьем" }
+                ]
+            },
+            {
+                id: 3,
+                name: "Sage",
+                realName: "Wei Lin",
+                role: "sentinel",
+                roleName: "Страж",
+                origin: "Китай",
+                description: "Целительница, способная воскрешать павших союзников и создавать ледяные стены.",
+                lore: {
+                    background: "Сейдж родилась в Китае, в маленькой деревне в горах. С детства она обладала способностью чувствовать жизненную энергию живых существ. Её учили использовать эту силу для исцеления, но она всегда чувствовала, что её предназначение — нечто большее. Когда началась Первая Световая Война, Сейдж присоединилась к программе VALORANT, чтобы спасать жизни и защищать невинных. Она стала одним из первых агентов программы и с тех пор остаётся её опорой.",
+                    personality: "Сейдж — спокойная, мудрая и заботливая. Она часто выступает голосом разума в команде и всегда готова выслушать и поддержать. Несмотря на свой мягкий характер, она может быть решительной, когда дело касается защиты других.",
+                    relationships: "Она заботится обо всех агентах, как о семье. Особенно близка с Рейзой и Невой. Она также уважает Сайфера за его преданность делу, несмотря на его паранойю."
+                },
+                abilities: [
+                    { key: "Q", name: "Ледяная стена", desc: "Создаёт ледяную стену, которую можно разбить" },
+                    { key: "E", name: "Исцеление", desc: "Восстанавливает здоровье себе или союзнику" },
+                    { key: "C", name: "Замедляющая сфера", desc: "Создаёт область, замедляющую врагов" },
+                    { key: "X", name: "Воскрешение", desc: "Возвращает павшего союзника к жизни" }
+                ]
+            },
+            {
+                id: 4,
+                name: "Reyna",
+                realName: "Zyanya Reyes",
+                role: "duelist",
+                roleName: "Дуэлянт",
+                origin: "Мексика",
+                description: "Вампироподобный агент, питающийся душами убитых врагов.",
+                lore: {
+                    background: "Рейна родилась в Мексика, в семье охотников на демонов. С детства она обучалась искусству боя и магии. Когда ей было 16 лет, её деревня была атакована существами из другого мира. Рейна выжила, но потеряла всю свою семью. В ярости она поклялась отомстить и стала охотиться на этих существ. Она обнаружила, что может поглощать их души, получая силу. Рейна присоединилась к программе VALORANT, чтобы найти и уничтожить всех существ, убивших её семью.",
+                    personality: "Рейна — одинокий волк, который доверяет только себе. Она жестока и безжалостна к врагам, но в глубине души она всё ещё страдает от потери семьи. Её жажда мести — единственное, что движет ею.",
+                    relationships: "Она не доверяет другим агентам и работает в одиночку. Единственный, кого она уважает — это Сейдж, которая напоминает ей о её семье. С КЕЙ/О у неё сложные отношения, так как он видит в ней угрозу."
+                },
+                abilities: [
+                    { key: "Q", name: "Поглощение души", desc: "Поглощает душу убитого врага, восстанавливая здоровье" },
+                    { key: "E", name: "Отбрасывание", desc: "Отталкивает врагов и даёт ускорение" },
+                    { key: "C", name: "Прорицание", desc: "Ослепляет врагов через стены" },
+                    { key: "X", name: "Императрица", desc: "Усиливает все способности и даёт бесконечные души" }
+                ]
+            },
+            {
+                id: 5,
+                name: "Omen",
+                realName: "???",
+                role: "controller",
+                roleName: "Контролёр",
+                origin: "???",
+                description: "Теневой агент, способный телепортироваться и ослеплять врагов.",
+                lore: {
+                    background: "Происхождение Омена — одна из самых больших тайн программы VALORANT. Известно только, что он появился после инцидента в лаборатории Кингдом, где проводились эксперименты с другим измерением. Омен — результат неудачного эксперимента, который стёр его личность и память. Он не помнит, кем был раньше, и не знает, как получил свои способности. Омен присоединился к программе VALORANT, чтобы найти ответы о своём прошлом и понять, кто он такой.",
+                    personality: "Омен — молчаливый и мрачный. Он говорит загадками и редко раскрывает свои истинные намерения. Несмотря на свою загадочность, он предан своей миссии и всегда выполняет свою работу.",
+                    relationships: "Его отношения с другими агентами напряжённые. Он работает с ними, но держит дистанцию. С Астрой у него особая связь, так как они оба связаны с космосом и неизведанным."
+                },
+                abilities: [
+                    { key: "Q", name: "Теневой шаг", desc: "Телепортируется на короткое расстояние" },
+                    { key: "E", name: "Тёмная завеса", desc: "Создаёт стену теней, блокирующую обзор" },
+                    { key: "C", name: "Ослепление", desc: "Ослепляет врагов через стены" },
+                    { key: "X", name: "Из тени", desc: "Телепортируется в любую точку карты" }
+                ]
+            },
+            {
+                id: 6,
+                name: "Cypher",
+                realName: "Amir El Amari",
+                role: "sentinel",
+                roleName: "Страж",
+                origin: "Марокко",
+                description: "Хакер и слежка, использующий камеры и ловушки для контроля карты.",
+                lore: {
+                    background: "Сайфер родился в Марокко, в семье торговцев. С детства он увлекался технологиями и хакерством. В подростковом возрасте он взломал систему безопасности крупной корпорации, что привлекло внимание властей. Чтобы избежать тюрьмы, он был вынужден работать на программу VALORANT. Сайфер присоединился к программе, чтобы найти правду о своём прошлом и понять, кто он такой. Он использует свои навыки для сбора информации и защиты команды.",
+                    personality: "Сайфер — параноик, который доверяет только себе. Он всегда на шаг впереди врагов и никогда не раскрывает свои планы. Несмотря на свою замкнутость, он предан своей команде и всегда готов прийти на помощь.",
+                    relationships: "Он работает в одиночку, но уважает Сейдж за её преданность команде. С Киллджой у него дружеские отношения, так как они оба работают с технологиями."
+                },
+                abilities: [
+                    { key: "Q", name: "Камера", desc: "Устанавливает камеру для слежки" },
+                    { key: "E", name: "Клетка", desc: "Создаёт клетку, замедляющую врагов" },
+                    { key: "C", name: "Ловушка", desc: "Устанавливает ловушку, раскрывающую позицию врага" },
+                    { key: "X", name: "Нейронный кража", desc: "Раскрывает позицию всех врагов" }
+                ]
+            },
+            {
+                id: 7,
+                name: "Breach",
+                realName: "Erik Torsten",
+                role: "initiator",
+                roleName: "Инициатор",
+                origin: "Швеция",
+                description: "Взрывной агент, создающий землетрясения и огненные волны.",
+                lore: {
+                    background: "Брич родился в Швеции, в семье военных. С детства он обучался искусству ведения боевых действий. Во время службы в армии он попал в засаду, где получил серьёзные ранения. Восстанавливаясь в госпитале, он обнаружил, что получил способность манипулировать землёй. Брич присоединился к программе VALORANT, чтобы использовать свою силу для защиты других и найти своё место в мире.",
+                    personality: "Брич — громкий, шумный и весёлый. Он любит быть в центре внимания и заряжает энергией команду. Несмотря на свой шутливый характер, он серьёзно относится к своей работе и всегда готов прийти на помощь.",
+                    relationships: "Он хороший друг Феникса и часто подбадривает его. С Рейзой у него дружеские отношения. Он также близок с Совой, который разделяет его любовь к приключениям."
+                },
+                abilities: [
+                    { key: "Q", name: "Сейсмический удар", desc: "Создаёт волну, проходящую сквозь стены" },
+                    { key: "E", name: "Огненная волна", desc: "Создаёт огненную волну, наносящую урон" },
+                    { key: "C", name: "Разлом", desc: "Создаёт разлом в земле, оглушающий врагов" },
+                    { key: "X", name: "Землетрясение", desc: "Создаёт мощное землетрясение, оглушающее всех врагов" }
+                ]
+            },
+            {
+                id: 8,
+                name: "Sova",
+                realName: "Sasha Novikov",
+                role: "initiator",
+                roleName: "Инициатор",
+                origin: "Россия",
+                description: "Следопыт с луком, раскрывающий позицию врагов с помощью дронов.",
+                lore: {
+                    background: "Сова родился в России, в Сибири. Он вырос в суровых условиях, где выживание было главным приоритетом. С детства он обучался охоте и слежке. Однажды во время охоты он обнаружил древний артефакт, который дал ему способность видеть будущее. Сова присоединился к программе VALORANT, чтобы использовать свои способности для защиты других и найти своё место в мире.",
+                    personality: "Сова — спокойный, рассудительный и мудрый. Он всегда думает наперёд и стратегически планирует каждый шаг. Несмотря на свою сдержанность, он предан своей команде и всегда готов прийти на помощь.",
+                    relationships: "Он уважает всех агентов, но особенно близок с Бричем и Фениксом. Он также уважает Сейдж за её преданность команде."
+                },
+                abilities: [
+                    { key: "Q", name: "Дрон", desc: "Запускает дрон для разведки" },
+                    { key: "E", name: "Сова", desc: "Запускает сову, раскрывающую врагов" },
+                    { key: "C", name: "Шоковая стрела", desc: "Выпускает стрелу, наносящую урон" },
+                    { key: "X", name: "Гнев охотника", desc: "Выпускает три мощные стрелы" }
+                ]
+            },
+            {
+                id: 9,
+                name: "Viper",
+                realName: "Sabine Callas",
+                role: "controller",
+                roleName: "Контролёр",
+                origin: "Германия",
+                description: "Токсичный агент, создающий ядовитые облака и стены.",
+                lore: {
+                    background: "Вайпер родилась в Германии, в семье учёных. С детства она увлекалась химией и биологией. Во время учёбы в университете она попала в аварию в лаборатории, в результате которой получила свои токсичные способности. После долгой реабилитации она научилась контролировать свою силу. Вайпер присоединилась к программе VALORANT, чтобы отомстить за свою семью, погибшую в результате экспериментов корпорации Кингдом.",
+                    personality: "Вайпер — холодная, расчётливая и манипулятивная. Она использует других для достижения своих целей и никогда не раскрывает свои истинные намерения. Несмотря на свой жестокий характер, она предан своей команде и всегда выполняет свою работу.",
+                    relationships: "Она не доверяет никому, кроме себя. Единственный, кого она уважает — это Омен, который понимает её боль. С Дэдлок у неё сложные отношения, так как они обе работают с технологиями."
+                },
+                abilities: [
+                    { key: "Q", name: "Ядовитое облако", desc: "Создаёт ядовитое облако" },
+                    { key: "E", name: "Токсичная стена", desc: "Создаёт стену токсичного газа" },
+                    { key: "C", name: "Укус змеи", desc: "Создаёт лужу кислоты" },
+                    { key: "X", name: "Гнездо змеи", desc: "Создаёт огромную область токсичного газа" }
+                ]
+            },
+            {
+                id: 10,
+                name: "Killjoy",
+                realName: "Klara Böhringer",
+                role: "sentinel",
+                roleName: "Страж",
+                origin: "Германия",
+                description: "Инженер, использующая турели и ловушки для защиты позиций.",
+                lore: {
+                    background: "Киллджой родилась в Германии, в семье инженеров. С детства она увлекалась созданием устройств и механизмов. В подростковом возрасте она создала своего первого робота, который привлёк внимание программы VALORANT. Киллджой присоединилась к программе, чтобы использовать свои изобретения для спасения жизней и защиты невинных.",
+                    personality: "Киллджой — умная, изобретательная и немного застенчивая. Она предпочитает работать за кулисами и не любит быть в центре внимания. Несмотря на свою скромность, она предан своей команде и всегда готова прийти на помощь.",
+                    relationships: "Она дружит с Сайфером, так как они оба работают с технологиями. С Рейзой у неё напряжённые отношения, так как она видит в ней угрозу."
+                },
+                abilities: [
+                    { key: "Q", name: "Турель", desc: "Устанавливает турель, стреляющую по врагам" },
+                    { key: "E", name: "Наноботы", desc: "Устанавливает наноботы, взрывающиеся при активации" },
+                    { key: "C", name: "Ловушка", desc: "Устанавливает ловушку, обездвиживающую врагов" },
+                    { key: "X", name: "Перегрузка", desc: "Усиливает все устройства и даёт им бесконечные патроны" }
+                ]
+            },
+            {
+                id: 11,
+                name: "Skye",
+                realName: "Kirby McKenzie",
+                role: "initiator",
+                roleName: "Инициатор",
+                origin: "Австралия",
+                description: "Друид, призывающий животных для разведки и исцеления.",
+                lore: {
+                    background: "Скай родилась в Австралии, в семье рейнджеров. С детства она обучалась искусству выживания в дикой природе. Однажды во время экспедиции она обнаружила древний артефакт, который дал ей способность общаться с животными. Скай присоединилась к программе VALORANT, чтобы защитить природу и своих друзей.",
+                    personality: "Скай — добрая, заботливая и оптимистичная. Она всегда готова помочь другим и видит лучшее в каждом. Несмотря на свой мягкий характер, она может быть решительной, когда дело касается защиты других.",
+                    relationships: "Она хороший друг всех агентов, особенно близка с Фениксом и Джетт. Она также уважает Сейдж за её преданность команде."
+                },
+                abilities: [
+                    { key: "Q", name: "Тревога", desc: "Призывает животное, раскрывающее врагов" },
+                    { key: "E", name: "Исцеление", desc: "Призывает животное, исцеляющее союзников" },
+                    { key: "C", name: "Светлячок", desc: "Призывает светлячка, ослепляющего врагов" },
+                    { key: "X", name: "Преследователи", desc: "Призывает трёх животных, преследующих врагов" }
+                ]
+            },
+            {
+                id: 12,
+                name: "Yoru",
+                realName: "Kyoya Iwahara",
+                role: "duelist",
+                roleName: "Дуэлянт",
+                origin: "Япония",
+                description: "Теневой агент, способный создавать копии и телепортироваться.",
+                lore: {
+                    background: "Ёру родился в Японии, в семье самураев. С детства он обучался искусству боя и маскировки. Однажды во время тренировки он обнаружил древний артефакт, который дал ему способность создавать копии и телепортироваться. Ёру присоединился к программе VALORANT, чтобы найти правду о своём прошлом и понять, кто он такой.",
+                    personality: "Ёру — загадочный, немного высокомерный и независимый. Он любит играть с врагами и никогда не раскрывает свои истинные намерения. Несмотря на свой эгоцентричный характер, он предан своей команде и всегда готов прийти на помощь.",
+                    relationships: "Он работает в одиночку, но уважает Джетт за её навыки. С Оменом у него сложные отношения, так как они оба работают в одиночку."
+                },
+                abilities: [
+                    { key: "Q", name: "Копия", desc: "Создаёт копию Ёру, привлекающую внимание" },
+                    { key: "E", name: "Телепорт", desc: "Телепортируется в указанное место" },
+                    { key: "C", name: "Ослепление", desc: "Создаёт ослепляющую вспышку" },
+                    { key: "X", name: "Пространственный разрыв", desc: "Открывает портал в другую реальность" }
+                ]
+            },
+            {
+                id: 13,
+                name: "Astra",
+                realName: "Efia Danso",
+                role: "controller",
+                roleName: "Контролёр",
+                origin: "Гана",
+                description: "Агент, использующая космическую энергию для контроля карты.",
+                lore: {
+                    background: "Астра родилась в Гане, в семье астрономов. С детства она увлекалась космосом и звёздами. Однажды во время наблюдения за звёздами она обнаружила древний артефакт, который дал ей способность манипулировать космической энергией. Астра присоединилась к программе VALORANT, чтобы защитить мир от угроз из космоса.",
+                    personality: "Астра — уверенная в себе, мудрая и духовная. Она видит себя защитником вселенной и всегда готова прийти на помощь. Несмотря на свой спокойный характер, она может быть решительной, когда дело касается защиты других.",
+                    relationships: "Она уважает всех агентов, но особенно близка с Оменом, так как они оба связаны с космосом и неизведанным."
+                },
+                abilities: [
+                    { key: "Q", name: "Звёздный удар", desc: "Создаёт звёздный удар, оглушающий врагов" },
+                    { key: "E", name: "Туманность", desc: "Создаёт туманность, блокирующую обзор" },
+                    { key: "C", name: "Гравитационный колодец", desc: "Создаёт область, притягивающую врагов" },
+                    { key: "X", name: "Космический разрыв", desc: "Создаёт разрыв, разделяющий карту" }
+                ]
+            },
+            {
+                id: 14,
+                name: "KAY/O",
+                realName: "???",
+                role: "initiator",
+                roleName: "Инициатор",
+                origin: "???",
+                description: "Робот, подавляющий способности врагов и взрывающийся.",
+                lore: {
+                    background: "КЕЙ/О — робот, созданный для борьбы с радиантами. Его происхождение и цель остаются загадкой. Известно только, что он был создан в будущем и отправлен в прошлое, чтобы предотвратить катастрофу. КЕЙ/О присоединился к программе VALORANT, чтобы выполнить свою миссию и защитить мир от угроз.",
+                    personality: "КЕЙ/О — прямолинейный, честный и преданный. Он выполняет свою миссию без вопросов и никогда не отступает. Несмотря на свою роботизированную природу, он проявляет эмоции и сочувствие к другим.",
+                    relationships: "Он работает со всеми агентами, но особенно близок с Рейзой, так как они оба борются с радиантами. Он также уважает Сейдж за её преданность команде."
+                },
+                abilities: [
+                    { key: "Q", name: "Взрыв", desc: "Создаёт взрыв, наносящую урон" },
+                    { key: "E", name: "Подавление", desc: "Подавляет способности врагов" },
+                    { key: "C", name: "Фрагмент", desc: "Создаёт фрагмент, взрывающийся при активации" },
+                    { key: "X", name: "Нулевой пункт", desc: "Взрывается, подавляя всех врагов в радиусе" }
+                ]
+            },
+            {
+                id: 15,
+                name: "Fade",
+                realName: "Hazar Erten",
+                role: "initiator",
+                roleName: "Инициатор",
+                origin: "Турция",
+                description: "Агент, использующая страх и тени для раскрытия врагов.",
+                lore: {
+                    background: "Фейд родилась в Турции, в семье охотников на демонов. С детства она обучалась искусству боя и магии. Однажды во время охоты она обнаружила древний артефакт, который дал ей способность манипулировать страхом. Фейд присоединилась к программе VALORANT, чтобы найти правду о своём прошлом и понять, кто она такой.",
+                    personality: "Фейд — мрачная, загадочная и немного жестокая. Она использует страх как оружие и никогда не раскрывает свои истинные намерения. Несмотря на свой жестокий характер, она предан своей команде и всегда готова прийти на помощь.",
+                    relationships: "Она работает в одиночку, но уважает Омена за его способности. С Вайпер у неё сложные отношения, так как они обе используют страх как оружие."
+                },
+                abilities: [
+                    { key: "Q", name: "Страх", desc: "Создаёт волну страха, раскрывающую врагов" },
+                    { key: "E", name: "Тень", desc: "Создаёт тень, преследующую врагов" },
+                    { key: "C", name: "Кошмар", desc: "Создаёт кошмар, оглушающий врагов" },
+                    { key: "X", name: "Бездна", desc: "Создаёт область страха, замедляющую врагов" }
+                ]
+            },
+            {
+                id: 16,
+                name: "Harbor",
+                realName: "??",
+                role: "controller",
+                roleName: "Контролёр",
+                origin: "Индия",
+                description: "Агент, использующий воду для контроля карты и защиты.",
+                lore: {
+                    background: "Харбор родился в Индии, в семье рыбаков. С детства он обучался искусству выживания на воде. Однажды во время рыбалки он обнаружил древний артефакт, который дал ему способность манипулировать водой. Харбор присоединился к программе VALORANT, чтобы защитить мир от угроз и найти своё место в жизни.",
+                    personality: "Харбор — спокойный, мудрый и духовный. Он использует воду для исцеления и защиты. Несмотря на свой спокойный характер, он может быть решительным, когда дело касается защиты других.",
+                    relationships: "Он уважает всех агентов, но особенно близок с Сейдж, так как они оба целители. Он также уважает Скай за её преданность природе."
+                },
+                abilities: [
+                    { key: "Q", name: "Водяная стена", desc: "Создаёт стену воды, блокирующую обзор" },
+                    { key: "E", name: "Исцеление", desc: "Создаёт область, исцеляющую союзников" },
+                    { key: "C", name: "Водяной вихрь", desc: "Создаёт вихрь, замедляющий врагов" },
+                    { key: "X", name: "Цунами", desc: "Создаёт цунами, наносящее урон врагам" }
+                ]
+            },
+            {
+                id: 17,
+                name: "Gekko",
+                role: "initiator",
+                roleName: "Инициатор",
+                origin: "США",
+                description: "Агент, использующий существ для разведки и атаки.",
+                lore: {
+                    background: "Гекко родился в США, в семье учёных. С детства он увлекался биологией и генетикой. Во время учёбы в университете он создал первое существо, которое привлекло внимание программы VALORANT. Гекко присоединился к программе, чтобы использовать свои способности для защиты других и найти своё место в мире.",
+                    personality: "Гекко — весёлый, энергичный и немного безрассудный. Он любит приключения и всегда готов прийти на помощь. Несмотря на свой безрассудный характер, он предан своей команде и всегда выполняет свою работу.",
+                    relationships: "Он дружит со всеми агентами, особенно близок с Фениксом и Джетт. Он также уважает Скай за её преданность природе."
+                },
+                abilities: [
+                    { key: "Q", name: "Существо", desc: "Призывает существо, раскрывающее врагов" },
+                    { key: "E", name: "Разрыв", desc: "Призывает существо, взрывающееся при активации" },
+                    { key: "C", name: "Ослепление", desc: "Призывает существо, ослепляющее врагов" },
+                    { key: "X", name: "Безумие", desc: "Призывает существо, преследующее врагов" }
+                ]
+            },
+            {
+                id: 18,
+                name: "Deadlock",
+                role: "sentinel",
+                roleName: "Страж",
+                origin: "Норвегия",
+                description: "Агент, использующая наноботов для защиты и контроля.",
+                lore: {
+                    background: "Дэдлок родилась в Норвегии, в семье учёных. С детства она увлекалась технологиями и робототехникой. Во время учёбы в университете она создала первых наноботов, которые привлекли внимание программы VALORANT. Дэдлок присоединилась к программе, чтобы использовать свои наноботов для защиты других и найти своё место в мире.",
+                    personality: "Дэдлок — холодная, расчётливая и безжалостная. Она использует наноботов для достижения своих целей и никогда не раскрывает свои истинные намерения. Несмотря на свой жестокий характер, она предан своей команде и всегда выполняет свою работу.",
+                    relationships: "Она не доверяет никому, кроме себя. Единственный, кого она уважает — это Вайпер, которая понимает её боль. С Киллджой у неё сложные отношения, так как они обе работают с технологиями."
+                },
+                abilities: [
+                    { key: "Q", name: "Наноботы", desc: "Устанавливает наноботы, раскрывающие врагов" },
+                    { key: "E", name: "Сеть", desc: "Устанавливает сеть, замедляющую врагов" },
+                    { key: "C", name: "Ловушка", desc: "Устанавливает ловушку, обездвиживающую врагов" },
+                    { key: "X", name: "Изоляция", desc: "Создаёт область, изолирующую врагов" }
+                ]
+            },
+            {
+                id: 19,
+                name: "Iso",
+                role: "duelist",
+                roleName: "Дуэлянт",
+                origin: "Китай",
+                description: "Агент, использующий барьеры для защиты и атаки.",
+                lore: {
+                    background: "Изо родился в Китае, в семье военных. С детства он обучался искусству боя и стратегии. Однажды во время тренировки он обнаружил древний артефакт, который дал ему способность создавать барьеры. Изо присоединился к программе VALORANT, чтобы защитить мир от угроз и найти своё место в жизни.",
+                    personality: "Изо — спокойный, рассудительный и немного загадочный. Он предпочитает работать в одиночку и никогда не раскрывает свои истинные намерения. Несмотря на свою замкнутость, он предан своей команде и всегда готов прийти на помощь.",
+                    relationships: "Он уважает всех агентов, но особенно близок с Ёру, так как они оба работают в одиночку. Он также уважает Сейдж за её преданность команде."
+                },
+                abilities: [
+                    { key: "Q", name: "Барьер", desc: "Создаёт барьер, блокирующий урон" },
+                    { key: "E", name: "Ускорение", desc: "Даёт ускорение передвижения" },
+                    { key: "C", name: "Ослепление", desc: "Создаёт ослепляющую вспышку" },
+                    { key: "X", name: "Дуэль", desc: "Создаёт область, где можно сражаться только с одним врагом" }
+                ]
+            },
+            {
+                id: 20,
+                name: "Clove",
+                role: "controller",
+                roleName: "Контролёр",
+                origin: "Великобритания",
+                description: "Агент, использующая магию для контроля и исцеления.",
+                lore: {
+                    background: "Клов родилась в Великобритании, в семье магов. С детства она обучалась искусству магии и заклинаний. Однажды во время ритуала она обнаружила древний артефакт, который дал ей способность манипулировать магией. Клов присоединилась к программе VALORANT, чтобы защитить мир от угроз и найти своё место в жизни.",
+                    personality: "Клов — весёлая, энергичная и немного безрассудная. Она любит приключения и всегда готова прийти на помощь. Несмотря на свой безрассудный характер, она предан своей команде и всегда выполняет свою работу.",
+                    relationships: "Она дружит со всеми агентами, особенно близка с Фениксом и Джетт. Она также уважает Сейдж за её преданность команде."
+                },
+                abilities: [
+                    { key: "Q", name: "Магическая волна", desc: "Создаёт волну, наносящую урон" },
+                    { key: "E", name: "Исцеление", desc: "Восстанавливает здоровье себе или союзнику" },
+                    { key: "C", name: "Контроль", desc: "Создаёт область, замедляющую врагов" },
+                    { key: "X", name: "Взрыв", desc: "Создаёт мощный взрыв, наносящий урон" }
+                ]
+            },
+            {
+                id: 21,
+                name: "Vyse",
+                role: "sentinel",
+                roleName: "Страж",
+                origin: "Вьетнам",
+                description: "Агент, использующая растения для защиты и контроля.",
+                lore: {
+                    background: "Вайс родилась во Вьетнаме, в семье ботаников. С детства она обучалась искусству выращивания растений. Однажды во время экспедиции она обнаружила древний артефакт, который дал ей способность управлять растениями. Вайс присоединилась к программе VALORANT, чтобы защитить мир от угроз и найти своё место в жизни.",
+                    personality: "Вайс — спокойная, мудрая и заботливая. Она использует растения для защиты и исцеления. Несмотря на свой мягкий характер, она может быть решительной, когда дело касается защиты других.",
+                    relationships: "Она уважает всех агентов, но особенно близка с Сейдж, так как они оба целители. Она также уважает Скай за её преданность природе."
+                },
+                abilities: [
+                    { key: "Q", name: "Растение", desc: "Устанавливает растение, раскрывающее врагов" },
+                    { key: "E", name: "Лоза", desc: "Устанавливает лозу, замедляющую врагов" },
+                    { key: "C", name: "Шипы", desc: "Устанавливает шипы, наносящие урон" },
+                    { key: "X", name: "Перегрузка", desc: "Усиливает все растения и даёт им бесконечные патроны" }
+                ]
+            },
+            {
+                id: 22,
+                name: "Tejo",
+                role: "initiator",
+                roleName: "Инициатор",
+                origin: "Колумбия",
+                description: "Агент, использующий взрывчатку для атаки и контроля.",
+                lore: {
+                    background: "Тейо родился в Колумбии, в семье военных. С детства он обучался искусству ведения боевых действий. Однажды во время операции он обнаружил древний артефакт, который дал ему способность использовать взрывчатку. Тейо присоединился к программе VALORANT, чтобы защитить мир от угроз и найти своё место в жизни.",
+                    personality: "Тейо — весёлый, энергичный и немного безрассудный. Он любит приключения и всегда готов прийти на помощь. Несмотря на свой безрассудный характер, он предан своей команде и всегда выполняет свою работу.",
+                    relationships: "Он дружит со всеми агентами, особенно близок с Фениксом и Джетт. Он также уважает Скай за её преданность природе."
+                },
+                abilities: [
+                    { key: "Q", name: "Взрывчатка", desc: "Создаёт взрывчатку, наносящую урон" },
+                    { key: "E", name: "Огненная волна", desc: "Создаёт огненную волну, наносящую урон" },
+                    { key: "C", name: "Ослепление", desc: "Создаёт ослепляющую вспышку" },
+                    { key: "X", name: "Бомбардировка", desc: "Создаёт бомбардировку, наносящую урон" }
+                ]
+            },
+            {
+                id: 23,
+                name: "Waylay",
+                role: "initiator",
+                roleName: "Инициатор",
+                origin: "Таиланд",
+                description: "Агент, использующая свет для разведки и атаки.",
+                lore: {
+                    background: "Уэйлей родилась в Таиланде, в семье учёных. С детства она увлекалась физикой и оптикой. Однажды во время эксперимента она обнаружила древний артефакт, который дал ей способность манипулировать светом. Уэйлей присоединилась к программе VALORANT, чтобы защитить мир от угроз и найти своё место в жизни.",
+                    personality: "Уэйлей — спокойная, мудрая и заботливая. Она использует свет для защиты и исцеления. Несмотря на свой мягкий характер, она может быть решительной, когда дело касается защиты других.",
+                    relationships: "Она уважает всех агентов, но особенно близка с Сейдж, так как они оба целители. Она также уважает Скай за её преданность природе."
+                },
+                abilities: [
+                    { key: "Q", name: "Световая волна", desc: "Создаёт световую волну, наносящую урон" },
+                    { key: "E", name: "Исцеление", desc: "Восстанавливает здоровье себе или союзнику" },
+                    { key: "C", name: "Контроль", desc: "Создаёт область, замедляющую врагов" },
+                    { key: "X", name: "Взрыв", desc: "Создаёт мощный взрыв, наносящий урон" }
+                ]
+            }
+        ];
+
+        // Рендер карточек агентов
+        function renderAgents(filter = 'all') {
+            const grid = document.getElementById('agentsGrid');
+            grid.innerHTML = '';
+
+            const filteredAgents = filter === 'all' 
+                ? agents 
+                : agents.filter(agent => agent.role === filter);
+
+            filteredAgents.forEach((agent, index) => {
+                const card = document.createElement('div');
+                card.className = `agent-card fade-in stagger-${(index % 5) + 1}`;
+                card.innerHTML = `
+                    <span class="agent-role">${agent.roleName}</span>
+                    <h3 class="agent-name">${agent.name}</h3>
+                    <p class="agent-real-name">${agent.realName}</p>
+                    <div class="agent-origin">${agent.origin}</div>
+                    <p class="agent-description">${agent.description}</p>
+                `;
+                card.onclick = () => openModal(agent);
+                grid.appendChild(card);
+            });
+        }
+
+        // Открытие модального окна
+        function openModal(agent) {
+            document.getElementById('modalRole').textContent = agent.roleName;
+            document.getElementById('modalName').textContent = agent.name;
+            document.getElementById('modalRealName').textContent = agent.realName;
+
+            const body = document.getElementById('modalBody');
+            body.innerHTML = `
+                <div class="lore-section">
+                    <h3>Предыстория</h3>
+                    <p>${agent.lore.background}</p>
+                </div>
+                <div class="lore-section">
+                    <h3>Характер</h3>
+                    <p>${agent.lore.personality}</p>
+                </div>
+                <div class="lore-section">
+                    <h3>Отношения</h3>
+                    <p>${agent.lore.relationships}</p>
+                </div>
+                <div class="lore-section">
+                    <h3>Способности</h3>
+                    <div class="abilities-grid">
+                        ${agent.abilities.map(ability => `
+                            <div class="ability">
+                                <span class="ability-key">${ability.key}</span>
+                                <div class="ability-name">${ability.name}</div>
+                                <div class="ability-desc">${ability.desc}</div>
+                            </div>
+                        `).join('')}
+                    </div>
+                </div>
+            `;
+
+            document.getElementById('modalOverlay').classList.add('active');
+            document.body.style.overflow = 'hidden';
+        }
+
+        // Закрытие модального окна
+        function closeModal(event) {
+            if (!event || event.target === document.getElementById('modalOverlay') || event.target.classList.contains('modal-close')) {
+                document.getElementById('modalOverlay').classList.remove('active');
+                document.body.style.overflow = '';
+            }
+        }
+
+        // Прокрутка к агентам
+        function scrollToAgents() {
+            document.getElementById('agents').scrollIntoView({ behavior: 'smooth' });
+        }
+
+        // Фильтрация
+        document.querySelectorAll('.filter-btn').forEach(btn => {
+            btn.addEventListener('click', () => {
+                document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+                btn.classList.add('active');
+                renderAgents(btn.dataset.filter);
+            });
+        });
+
+        // Закрытие по Escape
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape') closeModal();
+        });
+
+        // Инициализация
+        renderAgents();
+    </script>
+</body>
+</html>
