@@ -546,6 +546,127 @@
         .stagger-3 { animation-delay: 0.3s; }
         .stagger-4 { animation-delay: 0.4s; }
         .stagger-5 { animation-delay: 0.5s; }
+
+        /* Граф взаимоотношений */
+        .graph-section {
+            padding: 60px 40px;
+            background: rgba(255, 255, 255, 0.02);
+        }
+
+        .graph-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            position: relative;
+        }
+
+        .graph-svg {
+            width: 100%;
+            height: 600px;
+            background: rgba(0, 0, 0, 0.2);
+            border: 1px solid rgba(255, 70, 85, 0.2);
+            border-radius: 10px;
+        }
+
+        .graph-node {
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .graph-node:hover {
+            filter: brightness(1.3);
+        }
+
+        .graph-node-circle {
+            fill: var(--dark);
+            stroke: var(--red);
+            stroke-width: 2;
+        }
+
+        .graph-node-text {
+            fill: var(--light);
+            font-size: 12px;
+            font-weight: 700;
+            text-anchor: middle;
+            dominant-baseline: central;
+            font-family: 'Rajdhani', sans-serif;
+        }
+
+        .graph-edge {
+            fill: none;
+            stroke-width: 2;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .graph-edge:hover {
+            stroke-width: 4;
+            filter: brightness(1.5);
+        }
+
+        .graph-edge.love { stroke: #ff69b4; }
+        .graph-edge.hate { stroke: #8b0000; }
+        .graph-edge.friendship { stroke: #00ff7f; }
+        .graph-edge.rivalry { stroke: #ff8c00; }
+        .graph-edge.family { stroke: #4169e1; }
+        .graph-edge.respect { stroke: #00bfff; }
+
+        .graph-tooltip {
+            position: absolute;
+            background: rgba(15, 25, 35, 0.95);
+            border: 1px solid var(--red);
+            padding: 15px;
+            border-radius: 8px;
+            max-width: 300px;
+            z-index: 1000;
+            pointer-events: none;
+            opacity: 0;
+            transition: opacity 0.3s;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+        }
+
+        .graph-tooltip.visible {
+            opacity: 1;
+        }
+
+        .graph-tooltip h4 {
+            color: var(--red);
+            margin-bottom: 8px;
+            font-size: 14px;
+        }
+
+        .graph-tooltip p {
+            font-size: 13px;
+            line-height: 1.5;
+            opacity: 0.9;
+        }
+
+        .graph-legend {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            margin-top: 20px;
+            flex-wrap: wrap;
+        }
+
+        .legend-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 13px;
+        }
+
+        .legend-color {
+            width: 20px;
+            height: 3px;
+            border-radius: 2px;
+        }
+
+        .legend-color.love { background: #ff69b4; }
+        .legend-color.hate { background: #8b0000; }
+        .legend-color.friendship { background: #00ff7f; }
+        .legend-color.rivalry { background: #ff8c00; }
+        .legend-color.family { background: #4169e1; }
+        .legend-color.respect { background: #00bfff; }
     </style>
 </head>
 <body>
@@ -582,6 +703,38 @@
         </div>
     </section>
 
+    <section class="graph-section" id="graph">
+        <h2 class="section-title">Граф взаимоотношений</h2>
+        
+        <div class="graph-container">
+            <svg class="graph-svg" id="graphSvg"></svg>
+            <div class="graph-tooltip" id="graphTooltip"></div>
+            
+            <div class="graph-legend">
+                <div class="legend-item">
+                    <div class="legend-color love"></div>
+                    <span>Любовная связь</span>
+                </div>
+                <div class="legend-item">
+                    <div class="legend-color hate"></div>
+                    <span>Неприязнь</span>
+                </div>
+                <div class="legend-item">
+                    <div class="legend-color friendship"></div>
+                    <span>Дружба</span>
+                </div>
+                <div class="legend-item">
+                    <div class="legend-color rivalry"></div>
+                    <span>Соперничество</span>
+                </div>
+                <div class="legend-item">
+                    <div class="legend-color respect"></div>
+                    <span>Уважение</span>
+                </div>
+            </div>
+        </div>
+    </section>
+
     <!-- Модальное окно -->
     <div class="modal-overlay" id="modalOverlay" onclick="closeModal(event)">
         <div class="modal" onclick="event.stopPropagation()">
@@ -598,6 +751,40 @@
     </div>
 
     <script>
+        // Данные о взаимоотношениях
+        const relationships = [
+            { source: "Chamber", target: "Viper", type: "love", description: "Chamber и Viper — романтическая пара. Их связь началась с взаимного уважения к интеллекту друг друга, но быстро переросла в нечто большее. Оба — гении в своих областях, и их отношения построены на глубоком понимании и доверии." },
+            { source: "Raze", target: "Killjoy", type: "love", description: "Raze и Killjoy — романтическая пара. Несмотря на противоположные характеры (Raze — импульсивная и энергичная, Killjoy — спокойная и рассудительная), они идеально дополняют друг друга. Их любовь — это смесь приключений и уюта." },
+            { source: "KAY/O", target: "Reyna", type: "hate", description: "KAY/O и Reyna испытывают глубокую неприязнь друг к другу. KAY/O видит в Reyna угрозу из-за её вампирских способностей, а Reynа считает его ограниченным и наивным. Их конфликт — это столкновение идеалов: порядок против хаоса." },
+            { source: "Jett", target: "Reyna", type: "rivalry", description: "Jett и Reyna — соперницы. Обе — сильные и независимые дуэлянты, но их подходы к бою совершенно разные. Jett полагается на скорость и ловкость, а Reyna — на грубую силу и поглощение душ. Их соперничество часто переходит в открытые конфликты." },
+            { source: "Phoenix", target: "Jett", type: "friendship", description: "Phoenix и Jett — лучшие друзья. Оба — дуэлянты с яркими характерами и любовью к приключениям. Они часто вместе проводят время и прикрывают друг друга в бою." },
+            { source: "Sage", target: "Reyna", type: "respect", description: "Sage уважает Reyna за её силу и преданность семье, несмотря на их разные подходы к жизни. Sage — целительница, а Reyna — воительница, но обе готовы на всё ради тех, кого любят." },
+            { source: "Omen", target: "Astra", type: "respect", description: "Omen и Astra связаны космосом и неизведанным. Оба — загадочные личности, чьи способности выходят за рамки понимания. Они понимают друг друга без слов." },
+            { source: "Cypher", target: "Killjoy", type: "friendship", description: "Cypher и Killjoy — друзья, объединённые любовью к технологиям. Оба — гении в своих областях, и они часто обмениваются идеями и изобретениями." },
+            { source: "Breach", target: "Phoenix", type: "friendship", description: "Breach и Phoenix — друзья, объединённые любовью к приключениям и шуткам. Оба — яркие и энергичные личности, которые заряжают энергией всех вокруг." },
+            { source: "Sova", target: "Breach", type: "friendship", description: "Sova и Breach — друзья, объединённые любовью к приключениям. Несмотря на разные характеры (Sova — спокойный и рассудительный, Breach — громкий и шумный), они отлично работают вместе." },
+            { source: "Viper", target: "Omen", type: "respect", description: "Viper уважает Omen за его силу и загадочность. Оба — тёмные и загадочные личности, которые понимают друг друга без слов." },
+            { source: "Fade", target: "Omen", type: "respect", description: "Fade уважает Omen за его способности и загадочность. Оба — манипуляторы страха и теней, и они понимают друг друга." },
+            { source: "Harbor", target: "Sage", type: "friendship", description: "Harbor и Sage — друзья, объединённые любовью к исцелению. Оба — целители, которые используют свои способности для защиты других." },
+            { source: "Skye", target: "Phoenix", type: "love", description: "Skye и Phoenix — романтическая пара. Их связь началась с дружбы, но быстро переросла в нечто большее. Оба — яркие и энергичные личности, которые заряжают друг друга позитивом." },
+            { source: "Skye", target: "Jett", type: "friendship", description: "Skye и Jett — друзья, объединённые любовью к приключениям. Оба — яркие и энергичные личности, которые любят рисковать." },
+            { source: "Yoru", target: "Jett", type: "respect", description: "Yoru уважает Jett за её навыки и скорость. Оба — дуэлянты, которые полагаются на свои способности для победы." },
+            { source: "Yoru", target: "Omen", type: "rivalry", description: "Yoru и Omen — соперники. Оба — манипуляторы пространства и времени, и их способности часто конфликтуют. Их соперничество — это игра в кошки-мышки." },
+            { source: "Gekko", target: "Phoenix", type: "friendship", description: "Gekko и Phoenix — друзья, объединённые любовью к приключениям. Оба — яркие и энергичные личности, которые любят рисковать." },
+            { source: "Gekko", target: "Jett", type: "friendship", description: "Gekko и Jett — друзья, объединённые любовью к приключениям. Оба — яркие и энергичные личности, которые любят рисковать." },
+            { source: "Deadlock", target: "Viper", type: "rivalry", description: "Deadlock и Viper — соперницы. Оба — холодные и расчётливые личности, которые используют технологии для достижения своих целей. Их соперничество — это игра в шахматы." },
+            { source: "Deadlock", target: "Killjoy", type: "rivalry", description: "Deadlock и Killjoy — соперницы. Оба — гении в области технологий, и их изобретения часто конфликтуют. Их соперничество — это гонка за первенство." },
+            { source: "Iso", target: "Yoru", type: "friendship", description: "Iso и Yoru — друзья, объединённые любовью к одиночеству. Оба — независимые личности, которые предпочитают работать в одиночку." },
+            { source: "Clove", target: "Phoenix", type: "friendship", description: "Clove и Phoenix — друзья, объединённые любовью к приключениям. Оба — яркие и энергичные личности, которые любят рисковать." },
+            { source: "Clove", target: "Jett", type: "friendship", description: "Clove и Jett — друзья, объединённые любовью к приключениям. Оба — яркие и энергичные личности, которые любят рисковать." },
+            { source: "Vyse", target: "Sage", type: "friendship", description: "Vyse и Sage — друзья, объединённые любовью к исцелению. Оба — целители, которые используют свои способности для защиты других." },
+            { source: "Vyse", target: "Skye", type: "respect", description: "Vyse уважает Skye за её связь с природой. Обе — целители, которые используют свои способности для защиты других." },
+            { source: "Tejo", target: "Phoenix", type: "friendship", description: "Tejo и Phoenix — друзья, объединённые любовью к приключениям. Оба — яркие и энергичные личности, которые любят рисковать." },
+            { source: "Tejo", target: "Jett", type: "friendship", description: "Tejo и Jett — друзья, объединённые любовью к приключениям. Оба — яркие и энергичные личности, которые любят рисковать." },
+            { source: "Waylay", target: "Sage", type: "friendship", description: "Waylay и Sage — друзья, объединённые любовью к исцелению. Оба — целители, которые используют свои способности для защиты других." },
+            { source: "Waylay", target: "Skye", type: "respect", description: "Waylay уважает Skye за её связь с природу. Обе — целители, которые используют свои способности для защиты других." }
+        ];
+
         // Данные агентов
         const agents = [
             {
@@ -1049,8 +1236,48 @@
                 abilities: [
                     { key: "Q", name: "Световая волна", desc: "Создаёт световую волну, наносящую урон" },
                     { key: "E", name: "Исцеление", desc: "Восстанавливает здоровье себе или союзнику" },
-                    { key: "C", name: "Контроль", desc: "Создаёт область, замедляющую врагов" },
+                    { key: "C", name: "Контроль", desc: "Creates a slowing field" },
                     { key: "X", name: "Взрыв", desc: "Создаёт мощный взрыв, наносящий урон" }
+                ]
+            },
+            {
+                id: 24,
+                name: "Chamber",
+                realName: "Vincent Fabron",
+                role: "sentinel",
+                roleName: "Страж",
+                origin: "Франция",
+                description: "Агент, использующий мощное оружие и ловушки для защиты позиций.",
+                lore: {
+                    background: "Chamber родился во Франции, в семье оружейников. С детства он обучался искусству создания оружия. Однажды он обнаружил древний артефакт, который дал ему способность создавать мощное оружие. Chamber присоединился к программе VALORANT, чтобы защитить мир от угроз и найти своё место в жизни.",
+                    personality: "Chamber — уверенный в себе, немного высокомерный, но невероятно преданный своим друзьям. Он любит рисковать и часто действует импульсивно.",
+                    relationships: "Он состоит в романтических отношениях с Viper. Он также уважает всех агентов, но особенно близок с Sage."
+                },
+                abilities: [
+                    { key: "Q", name: "Охотник", desc: "Создаёт мощное оружие" },
+                    { key: "E", name: "Ловушка", desc: "Устанавливает ловушку" },
+                    { key: "C", name: "Телепорт", desc: "Телепортируется в указанное место" },
+                    { key: "X", name: "Суд", desc: "Создаёт мощный взрыв" }
+                ]
+            },
+            {
+                id: 25,
+                name: "Raze",
+                realName: "Jazmin Ochoa",
+                role: "duelist",
+                roleName: "Дуэлянт",
+                origin: "Бразилия",
+                description: "Агент, использующая взрывчатку для атаки и контроля.",
+                lore: {
+                    background: "Raze родилась в Бразилии, в семье инженеров. С детства она увлекалась созданием взрывчатых веществ. Однажды во время эксперимента она обнаружила древний артефакт, который дал ей способность создавать взрывчатку. Raze присоединилась к программе VALORANT, чтобы защитить мир от угроз и найти своё место в жизни.",
+                    personality: "Raze — весёлая, энергичная и немного безрассудная. Она любит приключения и всегда готова прийти на помощь.",
+                    relationships: "Она состоит в романтических отношениях с Killjoy. Она также уважает всех агентов, но особенно близка с Phoenix."
+                },
+                abilities: [
+                    { key: "Q", name: "Взрывчатка", desc: "Создаёт взрывчатку" },
+                    { key: "E", name: "Огненная волна", desc: "Создаёт огненную волну" },
+                    { key: "C", name: "Ослепление", desc: "Создаёт ослепляющую вспышку" },
+                    { key: "X", name: "Бомбардировка", desc: "Создаёт бомбардировку" }
                 ]
             }
         ];
@@ -1144,8 +1371,110 @@
             if (e.key === 'Escape') closeModal();
         });
 
+        // Отрисовка графа взаимоотношений
+        function renderGraph() {
+            const svg = document.getElementById('graphSvg');
+            const tooltip = document.getElementById('graphTooltip');
+            const width = svg.clientWidth || 1200;
+            const height = 600;
+            const centerX = width / 2;
+            const centerY = height / 2;
+            const radius = Math.min(width, height) / 2 - 80;
+
+            svg.setAttribute('viewBox', `0 0 ${width} ${height}`);
+            svg.innerHTML = '';
+
+            // Создаём узлы (только те агенты, у которых есть связи)
+            const connectedAgents = new Set();
+            relationships.forEach(rel => {
+                connectedAgents.add(rel.source);
+                connectedAgents.add(rel.target);
+            });
+
+            const agentsInGraph = agents.filter(a => connectedAgents.has(a.name));
+            const angleStep = (2 * Math.PI) / agentsInGraph.length;
+
+            const nodePositions = {};
+            agentsInGraph.forEach((agent, i) => {
+                const angle = i * angleStep - Math.PI / 2;
+                nodePositions[agent.name] = {
+                    x: centerX + radius * Math.cos(angle),
+                    y: centerY + radius * Math.sin(angle)
+                };
+            });
+
+            // Рисуем рёбра (связи)
+            relationships.forEach(rel => {
+                const source = nodePositions[rel.source];
+                const target = nodePositions[rel.target];
+                if (!source || !target) return;
+
+                const line = document.createElementNS('http://www.w3.org/2000/svg', 'line');
+                line.setAttribute('x1', source.x);
+                line.setAttribute('y1', source.y);
+                line.setAttribute('x2', target.x);
+                line.setAttribute('y2', target.y);
+                line.setAttribute('class', `graph-edge ${rel.type}`);
+                line.setAttribute('data-source', rel.source);
+                line.setAttribute('data-target', rel.target);
+                line.setAttribute('data-type', rel.type);
+                line.setAttribute('data-description', rel.description);
+
+                line.addEventListener('mouseenter', (e) => {
+                    tooltip.innerHTML = `
+                        <h4>${rel.source} ↔ ${rel.target}</h4>
+                        <p>${rel.description}</p>
+                    `;
+                    tooltip.classList.add('visible');
+                });
+
+                line.addEventListener('mousemove', (e) => {
+                    const rect = svg.getBoundingClientRect();
+                    let x = e.clientX - rect.left + 15;
+                    let y = e.clientY - rect.top + 15;
+                    if (x + 300 > rect.width) x -= 320;
+                    if (y + 150 > rect.height) y -= 170;
+                    tooltip.style.left = x + 'px';
+                    tooltip.style.top = y + 'px';
+                });
+
+                line.addEventListener('mouseleave', () => {
+                    tooltip.classList.remove('visible');
+                });
+
+                svg.appendChild(line);
+            });
+
+            // Рисуем узлы (агенты)
+            agentsInGraph.forEach(agent => {
+                const pos = nodePositions[agent.name];
+                const group = document.createElementNS('http://www.w3.org/2000/svg', 'g');
+                group.setAttribute('class', 'graph-node');
+
+                const circle = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
+                circle.setAttribute('cx', pos.x);
+                circle.setAttribute('cy', pos.y);
+                circle.setAttribute('r', 35);
+                circle.setAttribute('class', 'graph-node-circle');
+
+                const text = document.createElementNS('http://www.w3.org/2000/svg', 'text');
+                text.setAttribute('x', pos.x);
+                text.setAttribute('y', pos.y);
+                text.setAttribute('class', 'graph-node-text');
+                text.textContent = agent.name.substring(0, 2).toUpperCase();
+
+                group.appendChild(circle);
+                group.appendChild(text);
+
+                group.addEventListener('click', () => openModal(agent));
+
+                svg.appendChild(group);
+            });
+        }
+
         // Инициализация
         renderAgents();
+        renderGraph();
     </script>
 </body>
 </html>
